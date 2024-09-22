@@ -121,7 +121,7 @@ in
       nativeBuildInputs = [
         hyprwayland-scanner
         makeWrapper
-        meson
+        cmake
         ninja
         cmake # needed for glaze
         pkg-config
