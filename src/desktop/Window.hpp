@@ -356,7 +356,7 @@ class CWindow {
     CAnimatedVariable<float> m_fActiveInactiveAlpha;
 
     // animated shadow color
-    CAnimatedVariable<CHyprColor> m_cRealShadowColor;
+    CAnimatedVariable<CColor> m_cRealShadowColor;
 
     // animated tint
     CAnimatedVariable<float> m_fDimPercent;

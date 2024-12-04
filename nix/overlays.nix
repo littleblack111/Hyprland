@@ -22,7 +22,6 @@ in {
     # Dependencies
     inputs.aquamarine.overlays.default
     inputs.hyprcursor.overlays.default
-    inputs.hyprgraphics.overlays.default
     inputs.hyprland-protocols.overlays.default
     inputs.hyprlang.overlays.default
     inputs.hyprutils.overlays.default

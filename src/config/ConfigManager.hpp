@@ -119,7 +119,7 @@ struct SConfigOptionDescription {
     };
 
     struct SColorData {
-        CHyprColor color;
+        CColor color;
     };
 
     struct SChoiceData {

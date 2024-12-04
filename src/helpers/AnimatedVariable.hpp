@@ -34,7 +34,7 @@ struct typeToANIMATEDVARTYPE_t<Vector2D> {
 };
 
 template <>
-struct typeToANIMATEDVARTYPE_t<CHyprColor> {
+struct typeToANIMATEDVARTYPE_t<CColor> {
     static constexpr ANIMATEDVARTYPE value = AVARTYPE_COLOR;
 };
 
@@ -63,7 +63,7 @@ concept OneOf = (... or std::same_as<T, U>);
 // This is mainly to get better errors if we put a type that's not supported
 // Otherwise template errors are ugly
 template <class T>
-concept Animable = OneOf<T, Vector2D, float, CHyprColor>;
+concept Animable = OneOf<T, Vector2D, float, CColor>;
 
 class CBaseAnimatedVariable {
   public:

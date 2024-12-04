@@ -38,13 +38,9 @@ class CShader {
     GLint   applyTint = -1;
     GLint   tint      = -1;
 
-    GLint   gradient        = -1;
-    GLint   gradientLength  = -1;
-    GLint   angle           = -1;
-    GLint   gradient2       = -1;
-    GLint   gradient2Length = -1;
-    GLint   angle2          = -1;
-    GLint   gradientLerp    = -1;
+    GLint   gradient       = -1;
+    GLint   gradientLength = -1;
+    GLint   angle          = -1;
 
     float   initialTime = 0;
     GLint   time        = -1;

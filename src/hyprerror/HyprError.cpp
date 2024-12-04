@@ -33,7 +33,7 @@ CHyprError::~CHyprError() {
     m_fFadeOpacity.unregister();
 }
 
-void CHyprError::queueCreate(std::string message, const CHyprColor& color) {
+void CHyprError::queueCreate(std::string message, const CColor& color) {
     m_szQueued = message;
     m_cQueued  = color;
 }
@@ -98,7 +98,7 @@ void CHyprError::createQueued() {
     cairo_stroke(CAIRO);
 
     // draw the text with a common font
-    const CHyprColor textColor = CHyprColor(0.9, 0.9, 0.9, 1.0);
+    const CColor textColor = CColor(0.9, 0.9, 0.9, 1.0);
     cairo_set_source_rgba(CAIRO, textColor.r, textColor.g, textColor.b, textColor.a);
 
     static auto           fontFamily = CConfigValue<std::string>("misc:font_family");
@@ -160,7 +160,7 @@ void CHyprError::createQueued() {
 
     m_bIsCreated = true;
     m_szQueued   = "";
-    m_cQueued    = CHyprColor();
+    m_cQueued    = CColor();
 
     g_pHyprRenderer->damageMonitor(PMONITOR);
 

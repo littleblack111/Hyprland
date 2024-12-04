@@ -10,7 +10,6 @@ executable(
     server_protos,
     aquamarine,
     hyprcursor,
-    hyprgraphics,
     hyprlang,
     hyprutils,
     dependency('gbm'),
