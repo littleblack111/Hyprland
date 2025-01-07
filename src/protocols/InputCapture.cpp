@@ -84,7 +84,6 @@ void CInputCaptureProtocol::sendModifiers(uint32_t mods_depressed, uint32_t mods
         manager->sendModifiers(mods_depressed, mods_locked, mods_locked, group);
 }
 
-
 void CInputCaptureProtocol::sendButton(uint32_t button, hyprlandInputCaptureManagerV1ButtonState state) {
     for (const auto& manager : m_vManagers)
         manager->sendButton(button, state);
