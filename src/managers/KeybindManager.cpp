@@ -110,7 +110,7 @@ CKeybindManager::CKeybindManager() {
     m_mDispatchers["resizewindowpixel"]              = resizeWindow;
     m_mDispatchers["swapnext"]                       = swapnext;
     m_mDispatchers["swapactiveworkspaces"]           = swapActiveWorkspaces;
-    m_mDispatchers["pin"]                            = pinActive;
+    m_mDispatchers["pin"]                         = pinActive;
     m_mDispatchers["mouse"]                          = mouse;
     m_mDispatchers["bringactivetotop"]               = bringActiveToTop;
     m_mDispatchers["alterzorder"]                    = alterZOrder;
