@@ -699,16 +699,18 @@ void CPointerManager::warpTo(const Vector2D& logical) {
 void CPointerManager::move(const Vector2D& deltaLogical) {
     const auto oldPos = pointerPos;
     auto       newPos = oldPos + Vector2D{std::isnan(deltaLogical.x) ? 0.0 : deltaLogical.x, std::isnan(deltaLogical.y) ? 0.0 : deltaLogical.y};
+    const auto locked = g_pInputManager->isLocked();
 
 
-    if (!g_pInputManager->isLocked()) {
+    if (!locked) {
         PROTO::inputCapture->sendMotion(newPos, deltaLogical);
-        if (PROTO::inputCapture->isCaptured())
-            PROTO::inputCapture->forceRelease();
     }
 
-    if (PROTO::inputCapture->isCaptured())
+    if (PROTO::inputCapture->isCaptured()) {
+        if (locked)
+            PROTO::inputCapture->forceRelease();
         return;
+    }
 
     warpTo(newPos);
 }
