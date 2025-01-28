@@ -62,6 +62,7 @@ void CInputCaptureProtocol::sendKeymap(SP<IKeyboard> keyboard, const UP<CHyprlan
         }
         size = 0;
     }
+        Debug::log(LOG, "[input-capture] Keymap sent! format: {} fd: {} size: {}", (uint32_t)format, fd, size);
 
     manager->sendKeymap(format, fd, size);
 
