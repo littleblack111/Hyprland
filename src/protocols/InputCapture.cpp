@@ -49,18 +49,16 @@ void CInputCaptureProtocol::sendKeymap(SP<IKeyboard> keyboard, const UP<CHyprlan
         return;
 
     hyprlandInputCaptureManagerV1KeymapFormat format;
-    CFileDescriptor                                       fd;
+    CFileDescriptor                           fd;
     uint32_t                                  size;
     if (keyboard) {
         format = HYPRLAND_INPUT_CAPTURE_MANAGER_V1_KEYMAP_FORMAT_XKB_V1;
-        if (!fd.setFlags(keyboard->xkbKeymapFD.get())) {
-            LOGM(ERR, "Failed to get xkb keymap fd");
-            return;
-        }
+        fd     = CFileDescriptor(keyboard->xkbKeymapFD.get());
         size   = keyboard->xkbKeymapString.length() + 1;
     } else {
         format = HYPRLAND_INPUT_CAPTURE_MANAGER_V1_KEYMAP_FORMAT_NO_KEYMAP;
-        if(!fd.setFlags(open("/dev/null", O_RDONLY | O_CLOEXEC))) {
+        fd     = CFileDescriptor(open("/dev/null", O_RDONLY | O_CLOEXEC));
+        if (!fd.isValid()) {
             LOGM(ERR, "Failed to open /dev/null");
             return;
         }
@@ -70,7 +68,7 @@ void CInputCaptureProtocol::sendKeymap(SP<IKeyboard> keyboard, const UP<CHyprlan
     manager->sendKeymap(format, fd.get(), size);
 
     if (!keyboard)
-      fd.reset();
+        fd.reset();
 }
 
 void CInputCaptureProtocol::forceRelease() {
