@@ -3,6 +3,8 @@
 #include "managers/SeatManager.hpp"
 #include "render/Renderer.hpp"
 #include <fcntl.h>
+#include <hyprutils/os/FileDescriptor.hpp>
+using namespace Hyprutils::OS;
 
 CInputCaptureProtocol::CInputCaptureProtocol(const wl_interface* iface, const int& ver, const std::string& name) : IWaylandProtocol(iface, ver, name) {
     ;
@@ -47,26 +49,26 @@ void CInputCaptureProtocol::sendKeymap(SP<IKeyboard> keyboard, const UP<CHyprlan
         return;
 
     hyprlandInputCaptureManagerV1KeymapFormat format;
-    int                                       fd;
+    CFileDescriptor                                       fd;
     uint32_t                                  size;
     if (keyboard) {
         format = HYPRLAND_INPUT_CAPTURE_MANAGER_V1_KEYMAP_FORMAT_XKB_V1;
-        fd     = keyboard->xkbKeymapFD.get();
+        fd.setFlags(keyboard->xkbKeymapFD.get());
         size   = keyboard->xkbKeymapString.length() + 1;
     } else {
         format = HYPRLAND_INPUT_CAPTURE_MANAGER_V1_KEYMAP_FORMAT_NO_KEYMAP;
-        fd     = open("/dev/null", O_RDONLY | O_CLOEXEC);
-        if (fd < 0) {
+        fd.setFlags(open("/dev/null", O_RDONLY | O_CLOEXEC));
+        if (!fd.isValid()) {
             LOGM(ERR, "Failed to open /dev/null");
             return;
         }
         size = 0;
     }
 
-    manager->sendKeymap(format, fd, size);
+    manager->sendKeymap(format, fd.get(), size);
 
     if (!keyboard)
-        close(fd);
+      fd.reset();
 }
 
 void CInputCaptureProtocol::forceRelease() {
