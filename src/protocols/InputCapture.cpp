@@ -53,12 +53,14 @@ void CInputCaptureProtocol::sendKeymap(SP<IKeyboard> keyboard, const UP<CHyprlan
     uint32_t                                  size;
     if (keyboard) {
         format = HYPRLAND_INPUT_CAPTURE_MANAGER_V1_KEYMAP_FORMAT_XKB_V1;
-        fd.setFlags(keyboard->xkbKeymapFD.get());
+        if (!fd.setFlags(keyboard->xkbKeymapFD.get())) {
+            LOGM(ERR, "Failed to get xkb keymap fd");
+            return;
+        }
         size   = keyboard->xkbKeymapString.length() + 1;
     } else {
         format = HYPRLAND_INPUT_CAPTURE_MANAGER_V1_KEYMAP_FORMAT_NO_KEYMAP;
-        fd.setFlags(open("/dev/null", O_RDONLY | O_CLOEXEC));
-        if (!fd.isValid()) {
+        if(!fd.setFlags(open("/dev/null", O_RDONLY | O_CLOEXEC))) {
             LOGM(ERR, "Failed to open /dev/null");
             return;
         }
