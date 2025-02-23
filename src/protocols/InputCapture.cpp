@@ -57,7 +57,7 @@ void CInputCaptureProtocol::sendKeymap(SP<IKeyboard> keyboard, const UP<CHyprlan
         size   = keyboard->xkbKeymapString.length() + 1;
     } else {
         format = HYPRLAND_INPUT_CAPTURE_MANAGER_V1_KEYMAP_FORMAT_NO_KEYMAP;
-        fd     = CFileDescriptor(open("/dev/null", O_RDONLY | O_CLOEXEC));
+        fd     = CFileDescriptor{open("/dev/null", O_RDONLY | O_CLOEXEC)};
         if (!fd.isValid()) {
             LOGM(ERR, "Failed to open /dev/null");
             return;
