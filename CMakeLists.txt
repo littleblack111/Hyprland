@@ -342,6 +342,7 @@ protocolnew("protocols" "xx-color-management-v4" true)
 protocolnew("protocols" "frog-color-management-v1" true)
 protocolnew("protocols" "wayland-drm" true)
 protocolnew("${HYPRLAND_PROTOCOLS}/protocols" "hyprland-ctm-control-v1" true)
+protocolnew("${HYPRLAND_PROTOCOLS}/protocols" "hyprland-input-capture-v1" true)
 protocolnew("${HYPRLAND_PROTOCOLS}/protocols" "hyprland-surface-v1" true)
 protocolnew("${HYPRLAND_PROTOCOLS}/protocols" "hyprland-lock-notify-v1" true)
 
@@ -378,8 +379,6 @@ protocolnew("staging/single-pixel-buffer" "single-pixel-buffer-v1" false)
 protocolnew("staging/security-context" "security-context-v1" false)
 protocolnew("staging/content-type" "content-type-v1" false)
 
-protocolnew("subprojects/hyprland-protocols/protocols" "hyprland-input-capture-v1"
-            true)
 protocolwayland()
 
 # tools
