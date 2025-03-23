@@ -30,6 +30,7 @@ constexpr std::string_view HELP = R"#(┏ hyprpm, a Hyprland Plugin Manager
 ┣ --force        | -f    → Force an operation ignoring checks (e.g. update -f)
 ┣ --no-shallow   | -s    → Disable shallow cloning of Hyprland sources
 ┣ --hl-url       |       → Pass a custom hyprland source url
+┣ --hl-dir       |       → Use local hyprland directory instead of cloning
 ┗
 )#";
 
@@ -47,6 +48,7 @@ int                        main(int argc, char** argv, char** envp) {
     std::vector<std::string> command;
     bool                     notify = false, notifyFail = false, verbose = false, force = false, noShallow = false;
     std::string              customHlUrl;
+    std::string              customHlDir;
 
     for (int i = 1; i < argc; ++i) {
         if (ARGS[i].starts_with("-")) {
@@ -68,6 +70,13 @@ int                        main(int argc, char** argv, char** envp) {
                 }
                 customHlUrl = ARGS[i + 1];
                 i++;
+            } else if (ARGS[i] == "--hl-dir") {
+                if (i + 1 >= argc) {
+                    std::println(stderr, "Missing argument for --hl-dir");
+                    return 1;
+                }
+                customHlDir = ARGS[i + 1];
+                i++;
             } else if (ARGS[i] == "--force" || ARGS[i] == "-f") {
                 force = true;
                 std::println("{}", statusString("!", Colors::RED, "Using --force, I hope you know what you are doing."));
@@ -88,6 +97,7 @@ int                        main(int argc, char** argv, char** envp) {
     g_pPluginManager->m_bVerbose      = verbose;
     g_pPluginManager->m_bNoShallow    = noShallow;
     g_pPluginManager->m_szCustomHlUrl = customHlUrl;
+    g_pPluginManager->m_szCustomHlDir = customHlDir;
 
     if (command[0] == "add") {
         if (command.size() < 2) {

@@ -463,33 +463,56 @@ bool CPluginManager::updateHeaders(bool force) {
         return false;
     }
 
-    const auto& HL_URL = m_szCustomHlUrl.empty() ? "https://github.com/hyprwm/Hyprland" : m_szCustomHlUrl;
+    // If a local directory is specified, use it instead of cloning
+    if (!m_szCustomHlDir.empty()) {
+        if (!std::filesystem::exists(m_szCustomHlDir)) {
+            std::println(stderr, "\n{}", failureString("Local Hyprland directory does not exist: {}", m_szCustomHlDir));
+            return false;
+        }
 
-    progress.printMessageAbove(statusString("!", Colors::YELLOW, "Cloning {}, this might take a moment.", HL_URL));
+        if (m_bVerbose)
+            progress.printMessageAbove(verboseString("Using local directory: {}", m_szCustomHlDir));
 
-    const bool bShallow = (HLVER.branch == "main") && !m_bNoShallow;
+        progress.printMessageAbove(infoString("Copying from local directory: {}", m_szCustomHlDir));
+        
+        std::string ret = execAndGet(std::format("cp -r {}/* {}", m_szCustomHlDir, WORKINGDIR));
+        if (m_bVerbose)
+            progress.printMessageAbove(verboseString("copy returned: {}", ret));
+        
+        if (!std::filesystem::exists(WORKINGDIR + "/src")) {
+            std::println(stderr, "\n{}", failureString("Invalid Hyprland directory. Missing src folder."));
+            return false;
+        }
+    } else {
+        const auto& HL_URL = m_szCustomHlUrl.empty() ? "https://github.com/hyprwm/Hyprland" : m_szCustomHlUrl;
 
-    // let us give a bit of leg-room for shallowing
-    // due to timezones, etc.
-    const std::string SHALLOW_DATE = trim(HLVER.date).empty() ? "" : execAndGet("LC_TIME=\"en_US.UTF-8\" date --date='" + HLVER.date + " - 1 weeks' '+%a %b %d %H:%M:%S %Y'");
+        progress.printMessageAbove(statusString("!", Colors::YELLOW, "Cloning {}, this might take a moment.", HL_URL));
 
-    if (m_bVerbose && bShallow)
-        progress.printMessageAbove(verboseString("will shallow since: {}", SHALLOW_DATE));
+        const bool bShallow = (HLVER.branch == "main") && !m_bNoShallow;
 
-    std::string ret =
-        execAndGet(std::format("cd {} && git clone --recursive {} hyprland-{}{}", getTempRoot(), HL_URL, USERNAME, (bShallow ? " --shallow-since='" + SHALLOW_DATE + "'" : "")));
+        // let us give a bit of leg-room for shallowing
+        // due to timezones, etc.
+        const std::string SHALLOW_DATE = trim(HLVER.date).empty() ? "" : execAndGet("LC_TIME=\"en_US.UTF-8\" date --date='" + HLVER.date + " - 1 weeks' '+%a %b %d %H:%M:%S %Y'");
 
-    if (!std::filesystem::exists(WORKINGDIR)) {
-        progress.printMessageAbove(failureString("Clone failed. Retrying without shallow."));
-        ret = execAndGet(std::format("cd {} && git clone --recursive {} hyprland-{}", getTempRoot(), HL_URL, USERNAME));
+        if (m_bVerbose && bShallow)
+            progress.printMessageAbove(verboseString("will shallow since: {}", SHALLOW_DATE));
+
+        std::string ret =
+            execAndGet(std::format("cd {} && git clone --recursive {} hyprland-{}{}", getTempRoot(), HL_URL, USERNAME, (bShallow ? " --shallow-since='" + SHALLOW_DATE + "'" : "")));
+
+        if (!std::filesystem::exists(WORKINGDIR)) {
+            progress.printMessageAbove(failureString("Clone failed. Retrying without shallow."));
+            ret = execAndGet(std::format("cd {} && git clone --recursive {} hyprland-{}", getTempRoot(), HL_URL, USERNAME));
+        }
+
+        if (!std::filesystem::exists(WORKINGDIR + "/.git")) {
+            std::println(stderr, "\n{}", failureString("Could not clone the Hyprland repository. shell returned:\n{}", ret));
+            return false;
+        }
+
+        progress.printMessageAbove(successString("Hyprland cloned"));
     }
-
-    if (!std::filesystem::exists(WORKINGDIR + "/.git")) {
-        std::println(stderr, "\n{}", failureString("Could not clone the Hyprland repository. shell returned:\n{}", ret));
-        return false;
-    }
-
-    progress.printMessageAbove(successString("Hyprland cloned"));
+    
     progress.m_iSteps           = 2;
     progress.m_szCurrentMessage = "Checking out sources";
     progress.print();
