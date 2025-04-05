@@ -383,7 +383,7 @@ protocolnew("staging/security-context" "security-context-v1" false)
 protocolnew("staging/content-type" "content-type-v1" false)
 protocolnew("staging/color-management" "color-management-v1" false)
 
-protocolnew("subprojects/hyprland-protocols/protocols" "hyprland-input-capture-v1"
+protocolnew("${HYPRLAND_PROTOCOLS}/protocols" "hyprland-input-capture-v1" true)
             true)
 protocolwayland()
 
