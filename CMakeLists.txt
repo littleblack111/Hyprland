@@ -387,7 +387,7 @@ protocolnew("staging/color-management" "color-management-v1" false)
 protocolnew("staging/xdg-toplevel-tag" "xdg-toplevel-tag-v1" false)
 protocolnew("staging/xdg-system-bell" "xdg-system-bell-v1" false)
 
-protocolnew("subprojects/hyprland-protocols/protocols" "hyprland-input-capture-v1"
+protocolnew("${HYPRLAND_PROTOCOLS}/protocols" "hyprland-input-capture-v1" true)
             true)
 protocolwayland()
 
