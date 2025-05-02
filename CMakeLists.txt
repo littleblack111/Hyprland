@@ -388,7 +388,6 @@ protocolnew("staging/xdg-toplevel-tag" "xdg-toplevel-tag-v1" false)
 protocolnew("staging/xdg-system-bell" "xdg-system-bell-v1" false)
 
 protocolnew("${HYPRLAND_PROTOCOLS}/protocols" "hyprland-input-capture-v1" true)
-            true)
 protocolwayland()
 
 # tools
